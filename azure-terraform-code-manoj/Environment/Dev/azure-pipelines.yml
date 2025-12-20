@@ -1,0 +1,32 @@
+
+trigger:
+- main
+
+pool: Saliyan
+
+stages:
+  - stage: Initvalidatedplan
+    displayName: Initvalidatedplan
+    jobs:
+      - job: Initvalidatedplan
+        displayName: Initvalidatedplan
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/Dev'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'slc'
+            backendAzureRmStorageAccountName: 'backendstg178'
+            backendAzureRmContainerName: 'backendcontainer17'
+            backendAzureRmKey: 'dev1.tfstate'
+
+  - stage: securityscan
+    displayName: securityscan
+    jobs:
+      - job: securityscan
+        
