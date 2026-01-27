@@ -1,0 +1,25 @@
+---- SAP -----
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# date
+Tue Jan 20 14:58:49 +01 2026
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# hostname
+VAS-FIXE-NOKIA-AAA-SAP-23
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# timedatectl
+who -b
+               Local time: Tue 2026-01-20 14:59:57 +01
+           Universal time: Tue 2026-01-20 13:59:57 UTC
+                 RTC time: Tue 2026-01-20 13:59:57
+                Time zone: Africa/Casablanca (+01, +0100)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# who -b
+         system boot  2024-05-29 10:02
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# uptime
+ 15:00:16 up 601 days,  4:58,  3 users,  load average: 0.47, 0.63, 0.55
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# ha role
+bash: ha: command not found...
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# health all
+bash: health: command not found...
+[root@VAS-FIXE-NOKIA-AAA-SAP-23 ~]# cat /etc/redhat-release
+Red Hat Enterprise Linux release 8.9 (Ootpa)
+
