@@ -1,0 +1,104 @@
+resource "azurerm_resource_group" "example" {
+  name = var.resource_group_name
+  location = var.location
+}
+
+
+resource "azurerm_virtual_network" "example" {
+  name                = "example-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_subnet" "example"  {
+  name                 = "example-subnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.example.name
+  address_prefixes     = ["10.0.1.0/24"]
+
+  
+}
+
+resource "azurerm_network_interface" "example" {
+  name                = "example-nic"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.example.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.example.id
+  }
+}
+resource "azurerm_public_ip" "example" {
+  name                = "TestPublicIp1"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  allocation_method   = "Static"
+  
+
+
+  
+}
+
+resource "azurerm_network_security_group" "example" {
+  name                = "TestSecurityGroup1"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "test123"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  
+}
+
+resource "azurerm_network_interface_security_group_association" "example" {
+  network_interface_id      = azurerm_network_interface.example.id
+  network_security_group_id = azurerm_network_security_group.example.id
+
+  depends_on = [azurerm_network_security_group.example, azurerm_network_interface.example]
+}
+  
+
+resource "azurerm_linux_virtual_machine" "example" {
+  name                = "VM-1"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  computer_name = "hostname"
+  size                = "Standard_D2s_v3"
+  admin_username      = "adminuser"
+  admin_password = "Password@123"
+  disable_password_authentication = false
+  
+  
+  network_interface_ids = [
+    azurerm_network_interface.example.id
+  ]
+
+  
+
+  os_disk {
+    name                 = "myOsDisk"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+     
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
+  }
+}
